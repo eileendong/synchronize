@@ -50,16 +50,24 @@ export default function DemoApp() {
         <div className="demo-app-main">
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, googleCalendarPlugin]}
-            initialView="dayGridMonth" // Set the initial view
+            initialView="timeGridWeek" // Set the initial view
             googleCalendarApiKey="AIzaSyAygIsrO9yITmaYM9PeEQdec5H2-upsEVY" // Add your Google Calendar API key here
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay',
+              right: 'timeGridWeek,timeGridDay,dayGridMonth',
             }}
-            events={{
-              googleCalendarId: userEmail, // Use state to dynamically set the calendar ID
-            }}
+            // events={{
+            //   googleCalendarId: userEmail, 'eileendingdong1@gmail.com',// Use state to dynamically set the calendar ID
+            // }}
+            eventSources={[
+              {
+                googleCalendarId: userEmail
+              },
+              // {
+              //   googleCalendarId: 'cs.washington.edu_kpim983lg1a6mctsbup4ftg2l4@group.calendar.google.com',
+              // }
+            ]}
           />
         </div>
       )}
