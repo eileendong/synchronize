@@ -96,6 +96,7 @@ export default function DemoApp() {
         <div className="banner">
         <h1>Hello, Welcome to Synchronize!</h1>
         <p>Please login with Google to sync your Google Calendar</p>
+        
         </div>
         
       </header>
@@ -177,7 +178,7 @@ export default function DemoApp() {
 <footer className="custom-footer">
   <div className="footer-left">
     <p>Made by Claudia, Eileen, Neha, Donna for DubHacks '24</p>
-    <a href="https://github.com/your-repo-link" target="_blank" rel="noopener noreferrer">
+    <a href="https://github.com/eileendong/synchronize" target="_blank" rel="noopener noreferrer">
       <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub Logo" className="github-logo" />
     </a>
   </div>
