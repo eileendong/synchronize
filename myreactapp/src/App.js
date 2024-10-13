@@ -1,6 +1,5 @@
 
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -11,13 +10,17 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 export default function DemoApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState(''); // State for user's email
-
-  const [inputName, setInputName] = useState(''); // Renamed `name` to `inputName`
-  const [namesList, setNamesList] = useState([]); // Renamed and properly defined
-  const [removeName, setRemoveName] = useState(''); // input for name to remove
+  const [namesList, setNamesList] = useState([]); // List for calendar IDs
+  const [removeName, setRemoveName] = useState(''); // Input for name to remove
   const [calendarId, setCalendarId] = useState(''); // State for storing calendar ID
-  let [inputCalendarList, setInputCalendarList] = useState([]);
+  let [inputCalendarList, setInputCalendarList] = useState([]); // List of calendars to sync
 
+  const getRandomColor = () => {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r},${g},${b})`;
+  };
   const handleGoogleLoginSuccess = (credentialResponse) => {
     console.log('Google Login Success:', credentialResponse);
     setIsLoggedIn(true);
@@ -28,49 +31,63 @@ export default function DemoApp() {
 
     // Retrieve the user's email and update state
     const email = decodedPayload.email;
-    setUserEmail(email); // Store email in state
-    setInputCalendarList(inputCalendarList => [
-      ...inputCalendarList,
-      { googleCalendarId: email, color: 'purple' }
-    ]);
-    console.log(inputCalendarList);
-    console.log(email);
+    setUserEmail(email);
+
+    // Add user's primary calendar (email) to the list by default
+    setNamesList([{ id: email, isChecked: true, isDefault: true }]); // Default checked and marked as default
+    setInputCalendarList([{ googleCalendarId: email, color: 'purple' }]); // Default calendar in sync list
   };
 
   const handleGoogleLoginFailure = (error) => {
     console.log('Google Login Failed:', error);
   };
 
-  //adding names
-  const handleAddName = () => {
-    if (inputName.trim() !== '') {
-      setNamesList((prevNames) => [...prevNames, inputName]);
-      setInputName(''); // Clear the input after adding
-    }
-  };
-
-  // Handle removing a name from the dropdown
-  const handleRemoveName = () => {
-    if (removeName.trim() !== '' && namesList.includes(removeName)) {
-      setNamesList((prevNames) => prevNames.filter((name) => name !== removeName));
-      setRemoveName(''); // Clear input after removing the name
-    }
-  };
-
-  //Handle submit
+  // Handle submit for calendar ID
   const handleSubmitCalendarId = () => {
     if (calendarId.trim() !== '') {
       console.log('Submitted Calendar ID:', calendarId);
-      // Perform actions with the calendar ID (e.g., fetching events)
-      setNamesList((prevNames) => [...prevNames, calendarId]);
-      setInputName(''); // Clear the input after adding
+      // Add new calendar ID to namesList and inputCalendarList
+      setNamesList((prevNames) => [...prevNames, { id: calendarId, isChecked: true, isDefault: false }]);
+
+      const newColor = getRandomColor(); // Get random RGB color
       setInputCalendarList(inputCalendarList => [
         ...inputCalendarList,
-        { googleCalendarId: calendarId }
+        { googleCalendarId: calendarId, color: newColor }
       ]);
-      console.log(inputCalendarList);
       setCalendarId(''); // Clear the input after submitting
     }
+  };
+
+  // Handle checkbox selection for synchronizing calendars
+  const handleCheckboxChange = (index) => {
+    const updatedNamesList = [...namesList];
+    updatedNamesList[index].isChecked = !updatedNamesList[index].isChecked;
+
+    // Update inputCalendarList based on checkbox selection
+    const updatedCalendarList = updatedNamesList
+      .filter(name => name.isChecked)
+      .map(name => ({
+        googleCalendarId: name.id,
+        color: name.isDefault ? 'purple' : inputCalendarList.find(calendar => calendar.googleCalendarId === name.id)?.color || getRandomColor()
+      }));
+
+    setNamesList(updatedNamesList);
+    setInputCalendarList(updatedCalendarList);
+  };
+
+  // Handle removing a calendar (excluding default calendar)
+  const handleRemoveName = () => {
+    // Ensure default calendar is not removed
+    const updatedNamesList = namesList.filter((name) => name.id !== removeName && !name.isDefault);
+
+    // Update calendar list by removing the corresponding calendar
+    const updatedCalendarList = updatedNamesList
+      .filter(name => name.isChecked)
+      .map(name => ({ googleCalendarId: name.id, color: name.isDefault ? 'purple' : 'blue' }));
+
+    setNamesList(updatedNamesList); // Remove the calendar from the namesList
+    setInputCalendarList(updatedCalendarList); // Update inputCalendarList for the calendar view
+    setRemoveName(''); // Clear the input
   };
 
   return (
@@ -94,8 +111,6 @@ export default function DemoApp() {
       {isLoggedIn && userEmail && (
         <>
           <div className="demo-app-main" style={{ margin: "50px 15px 30px 15px" }}></div>
-          {/* Input for person's name */}
-          
 
           {/* Input for calendar ID */}
           <div className="calendar-id-input">
@@ -112,28 +127,32 @@ export default function DemoApp() {
 
           {namesList.length > 0 && (
             <>
-              {/* Dropdown to show added names */}
-              <div className="dropdown-menu">
-                <select className="dropdown">
-                  {namesList.map((person, index) => (
-                    <option key={index} value={person}>
-                      {person}
-                    </option>
-                  ))}
-                </select>
+              {/* Checkbox List to show added names */}
+              <div className="checkbox-list">
+                {namesList.map((person, index) => (
+                  <label key={index} className="checkbox-item">
+                    <input
+                      type="checkbox"
+                      checked={person.isChecked}
+                      onChange={() => handleCheckboxChange(index)}
+                      disabled={person.isDefault} // Disable the checkbox for the default calendar
+                    />
+                    {person.id} {person.isDefault && '(Default)'}
+                  </label>
+                ))}
               </div>
 
               {/* Input for removing a person */}
-              <div className="remove-input">
+              {/* <div className="remove-input">
                 <input
                   type="text"
                   value={removeName}
                   onChange={(e) => setRemoveName(e.target.value)}
-                  placeholder="Enter name to remove"
+                  placeholder="Enter calendar ID to remove"
                   className="input-field"
                 />
                 <button className="btn remove-btn" onClick={handleRemoveName}>Remove</button>
-              </div>
+              </div> */}
             </>
           )}
 
@@ -165,18 +184,6 @@ export default function DemoApp() {
         .welcome-header {
           text-align: center;
           margin-bottom: 30px;
-        }
-
-        .form-section {
-          margin-bottom: 40px;
-          text-align: center;
-        }
-
-        .input-group {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 20px;
         }
 
         .input-field {
@@ -212,33 +219,17 @@ export default function DemoApp() {
           border-radius: 10px;
         }
 
-        .dropdown-menu {
+        .checkbox-list {
           display: flex;
+          flex-direction: column;
           justify-content: center;
           margin-bottom: 20px;
         }
 
-        .dropdown {
-          padding: 10px;
-          border-radius: 5px;
-          border: 1px solid #ccc;
-          width: 360px;
-          font-size: 16px;
-        }
-
-        .calendar-container {
-          margin-top: 30px;
-        }
-
-        h3 {
-          text-align: center;
+        .checkbox-item {
           margin-bottom: 10px;
-          font-weight: 600;
         }
       `}</style>
     </div>
   );
 }
-
-
-
