@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -61,6 +62,8 @@ export default function DemoApp() {
     if (calendarId.trim() !== '') {
       console.log('Submitted Calendar ID:', calendarId);
       // Perform actions with the calendar ID (e.g., fetching events)
+      setNamesList((prevNames) => [...prevNames, calendarId]);
+      setInputName(''); // Clear the input after adding
       setInputCalendarList(inputCalendarList => [
         ...inputCalendarList,
         { googleCalendarId: calendarId }
