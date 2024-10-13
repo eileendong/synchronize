@@ -95,15 +95,19 @@ export default function DemoApp() {
         <>
           <div className="demo-app-main" style={{ margin: "50px 15px 30px 15px" }}></div>
           {/* Input for person's name */}
-          <div className="name-input">
+          
+
+          {/* Input for calendar ID */}
+          <div className="calendar-id-input">
+            <h3>Please submit the email of the Google Calendar you want to sync (Or Calendar ID)</h3>
             <input 
               type="text" 
-              value={inputName}  // Updated to use `inputName`
-              onChange={(e) => setInputName(e.target.value)}  // Updated to use `setInputName`
-              placeholder="Enter friend's name"
+              placeholder="Enter the email or Calendar ID" 
+              value={calendarId} 
+              onChange={(e) => setCalendarId(e.target.value)} 
               className="input-field"
             />
-            <button className="btn synchronize-btn" onClick={handleAddName}>Synchronize</button>
+            <button className="btn submit-btn" onClick={handleSubmitCalendarId}>Synchronize</button>
           </div>
 
           {namesList.length > 0 && (
@@ -132,19 +136,6 @@ export default function DemoApp() {
               </div>
             </>
           )}
-
-          {/* Input for calendar ID */}
-          <div className="calendar-id-input">
-            <h3>Please submit the email of the Google Calendar you want to sync (Or Calendar ID)</h3>
-            <input 
-              type="text" 
-              placeholder="Enter your email or Calendar ID" 
-              value={calendarId} 
-              onChange={(e) => setCalendarId(e.target.value)} 
-              className="input-field"
-            />
-            <button className="btn submit-btn" onClick={handleSubmitCalendarId}>Submit</button>
-          </div>
 
           <div className="demo-app-main">
             <FullCalendar
@@ -248,3 +239,6 @@ export default function DemoApp() {
     </div>
   );
 }
+
+
+
