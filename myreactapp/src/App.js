@@ -93,8 +93,11 @@ export default function DemoApp() {
   return (
     <div className="demo-app">
       <header className="welcome-header">
+        <div className="banner">
         <h1>Hello, Welcome to Synchronize!</h1>
         <p>Please login with Google to sync your Google Calendar</p>
+        </div>
+        
       </header>
 
       {/* Google Login Button */}
@@ -174,62 +177,123 @@ export default function DemoApp() {
 
       {/* Inline CSS Styles */}
       <style jsx>{`
-        .demo-app {
-          font-family: Arial, sans-serif;
-          padding: 20px;
-          max-width: 1500px;
-          margin: 0 auto;
-        }
-        
-        .welcome-header {
-          text-align: center;
-          margin-bottom: 30px;
-        }
+    .demo-app {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
 
-        .input-field {
-          padding: 12px;
-          width: 350px;
-          border-radius: 5px;
-          border: 1px solid #ccc;
-          margin-right: 10px;
-          font-size: 16px;
-        }
+    .banner {
+      background-color: #e6e6fa; /* Light purple background */
+      padding: 30px 0;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
 
-        .btn {
-          padding: 10px 20px;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 16px;
-        }
+    .banner h1 {
+      font-size: 2.5rem;
+      color: #4b0082; /* Dark purple for the heading text */
+      margin: 0;
+    }
 
-        .synchronize-btn {
-          background-color: #007bff;
-          color: white;
-        }
+    .banner p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-top: 10px;
+    }
 
-        .remove-btn {
-          background-color: #ff4d4d;
-          color: white;
-        }
+    .calendar-id-input {
+      margin-bottom: 30px;
+      text-align: center;
+    }
 
-        .submit-btn {
-          background-color: #28a745;
-          color: white;
-          border-radius: 10px;
-        }
+    .calendar-id-input h3 {
+      font-size: 1.3rem;
+      color: #333;
+      margin-bottom: 15px;
+    }
 
-        .checkbox-list {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          margin-bottom: 20px;
-        }
+    .input-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .checkbox-item {
-          margin-bottom: 10px;
-        }
-      `}</style>
+    .input-field {
+      padding: 12px;
+      width: 350px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn {
+      background-color: #28a745;
+      color: white;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+
+    .submit-btn:hover {
+      background-color: #218838;
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      color: #333;
+      padding: 8px 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      width: 350px;
+      text-align: left;
+      margin: 0 auto;
+    }
+
+    .checkbox-item input {
+      margin-right: 10px;
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+
+    .checkbox-item:hover {
+      background-color: #e9ecef;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .demo-app-main {
+      margin-top: 40px;
+    }
+  `}</style>
     </div>
   );
 }
