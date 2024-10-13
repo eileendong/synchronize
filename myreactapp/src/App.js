@@ -6,19 +6,29 @@ import interactionPlugin from '@fullcalendar/interaction';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Calendar } from '@fullcalendar/core';
+import jwt_decode from 'jwt-decode';
 
 export default function DemoApp() {
-const [isLoggedIn, setIsLoggedIn] = useState(false);
-const handleGoogleLoginSuccess = (credentialResponse) => {
-      console.log('Google Login Success:', credentialResponse);
-      setIsLoggedIn(true);
-      // Store Google Calendar ID (You can replace with the user's actual calendar ID)
-     // setGoogleCalendarId('primary'); // This sets the primary Google Calendar ID (or use actual user ID from API)
-    };
-  
-    const handleGoogleLoginFailure = (error) => {
-      console.log('Google Login Failed:', error);
-    };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  let userEmail = "";
+  const handleGoogleLoginSuccess = (credentialResponse) => {
+        console.log('Google Login Success:', credentialResponse);
+        setIsLoggedIn(true);
+
+        const idToken = credentialResponse.credential;
+        const payload = idToken.split('.')[1]; // Get the payload part
+        const decodedPayload = JSON.parse(atob(payload)); // Decode Base64 and parse JSON
+
+        // Retrieve the user's email
+        userEmail =  `'${decodedPayload.email}'`;
+        console.log(userEmail);
+        // Store Google Calendar ID (You can replace with the user's actual calendar ID)
+      // setGoogleCalendarId('primary'); // This sets the primary Google Calendar ID (or use actual user ID from API)
+      };
+    
+  const handleGoogleLoginFailure = (error) => {
+    console.log('Google Login Failed:', error);
+  };
 
 
   return (
@@ -42,11 +52,16 @@ const handleGoogleLoginSuccess = (credentialResponse) => {
       {isLoggedIn && (
         <div className="demo-app-main">
          <FullCalendar
-        plugins={[googleCalendarPlugin, dayGridPlugin]}  // Use the plugins here
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, googleCalendarPlugin]}
         initialView="dayGridMonth"  // Set the initial view
         googleCalendarApiKey='AIzaSyAygIsrO9yITmaYM9PeEQdec5H2-upsEVY'  // Add your Google Calendar API key here
+        headerToolbar={{
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                      }}
         events={{
-          googleCalendarId: 'c881ffd9a11de496c10ecfa79ec51fe60c807ecb88d7ecaa8fae5ef7e5e85634@group.calendar.google.com',  // Google Calendar ID for fetching events
+          googleCalendarId: 'cgyonj@uw.edu'//userEmail,  // Google Calendar ID for fetching events
         }}
                   />
                 </div>
