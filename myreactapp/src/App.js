@@ -179,8 +179,6 @@
 //   );
 // }
 
-// this is neha's comment part 2 :D
-
 import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -197,6 +195,7 @@ export default function DemoApp() {
   const [namesList, setNamesList] = useState([]); // Renamed and properly defined
   const [removeName, setRemoveName] = useState(''); // input for name to remove
   const [calendarId, setCalendarId] = useState(''); // State for storing calendar ID
+  let [inputCalendarList, setInputCalendarList] = useState([]);
 
   const handleGoogleLoginSuccess = (credentialResponse) => {
     console.log('Google Login Success:', credentialResponse);
@@ -209,36 +208,47 @@ export default function DemoApp() {
     // Retrieve the user's email and update state
     const email = decodedPayload.email;
     setUserEmail(email); // Store email in state
+    setInputCalendarList(inputCalendarList => [
+      ...inputCalendarList,
+      { googleCalendarId: email }
+    ]);
+    console.log(inputCalendarList);
     console.log(email);
   };
 
   const handleGoogleLoginFailure = (error) => {
     console.log('Google Login Failed:', error);
   };
- //adding names
- const handleAddName = () => {
-  if (inputName.trim() !== '') {
-    setNamesList((prevNames) => [...prevNames, inputName]);
-    setInputName(''); // Clear the input after adding
-  }
-};
 
-// Handle removing a name from the dropdown
-const handleRemoveName = () => {
-  if (removeName.trim() !== '' && namesList.includes(removeName)) {
-    setNamesList((prevNames) => prevNames.filter((name) => name !== removeName));
-    setRemoveName(''); // Clear input after removing the name
-  }
-};
+  //adding names
+  const handleAddName = () => {
+    if (inputName.trim() !== '') {
+      setNamesList((prevNames) => [...prevNames, inputName]);
+      setInputName(''); // Clear the input after adding
+    }
+  };
 
-//Handle submit
-const handleSubmitCalendarId = () => {
-  if (calendarId.trim() !== '') {
-    console.log('Submitted Calendar ID:', calendarId);
-    // Perform actions with the calendar ID (e.g., fetching events)
-    setCalendarId(''); // Clear the input after submitting
-  }
-};
+  // Handle removing a name from the dropdown
+  const handleRemoveName = () => {
+    if (removeName.trim() !== '' && namesList.includes(removeName)) {
+      setNamesList((prevNames) => prevNames.filter((name) => name !== removeName));
+      setRemoveName(''); // Clear input after removing the name
+    }
+  };
+
+  //Handle submit
+  const handleSubmitCalendarId = () => {
+    if (calendarId.trim() !== '') {
+      console.log('Submitted Calendar ID:', calendarId);
+      // Perform actions with the calendar ID (e.g., fetching events)
+      setInputCalendarList(inputCalendarList => [
+        ...inputCalendarList,
+        { googleCalendarId: calendarId }
+      ]);
+      console.log(inputCalendarList);
+      setCalendarId(''); // Clear the input after submitting
+    }
+  };
 
   return (
     <div className="demo-app">
@@ -260,61 +270,60 @@ const handleSubmitCalendarId = () => {
       {/* FullCalendar Component */}
       {isLoggedIn && userEmail && (
         <>
-          <div className="form-section">
-            {/* Input for person's name */}
-            <div className="input-group">
-              <input 
-                type="text" 
-                value={inputName}  // Updated to use `inputName`
-                onChange={(e) => setInputName(e.target.value)}  // Updated to use `setInputName`
-                placeholder="Enter friend's name"
-                className="input-field"
-              />
-              <button className="btn synchronize-btn" onClick={handleAddName}>Synchronize</button>
-            </div>
-
-            {namesList.length > 0 && (
-              <>
-                {/* Dropdown to show added names */}
-                <div className="dropdown-menu">
-                  <select className="dropdown">
-                    {namesList.map((person, index) => (
-                      <option key={index} value={person}>
-                        {person}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Input for removing a person */}
-                <div className="input-group">
-                  <input
-                    type="text"
-                    value={removeName}
-                    onChange={(e) => setRemoveName(e.target.value)}
-                    placeholder="Enter name to remove"
-                    className="input-field"
-                  />
-                  <button className="btn remove-btn" onClick={handleRemoveName}>Remove</button>
-                </div>
-              </>
-            )}
-
-            {/* Input for calendar ID */}
-            <div className="input-group calendar-id-input">
-              <h3>Please submit the email of the Google Calendar you want to sync (Or Calendar ID)</h3>
-              <input 
-                type="text" 
-                placeholder="Enter your email or Calendar ID" 
-                value={calendarId} 
-                onChange={(e) => setCalendarId(e.target.value)} 
-                className="input-field"
-              />
-              <button className="btn submit-btn" onClick={handleSubmitCalendarId}>Submit</button>
-            </div>
+          <div className="demo-app-main" style={{ margin: "50px 15px 30px 15px" }}></div>
+          {/* Input for person's name */}
+          <div className="name-input">
+            <input 
+              type="text" 
+              value={inputName}  // Updated to use `inputName`
+              onChange={(e) => setInputName(e.target.value)}  // Updated to use `setInputName`
+              placeholder="Enter friend's name"
+              className="input-field"
+            />
+            <button className="btn synchronize-btn" onClick={handleAddName}>Synchronize</button>
           </div>
 
-          <div className="calendar-container">
+          {namesList.length > 0 && (
+            <>
+              {/* Dropdown to show added names */}
+              <div className="dropdown-menu">
+                <select className="dropdown">
+                  {namesList.map((person, index) => (
+                    <option key={index} value={person}>
+                      {person}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Input for removing a person */}
+              <div className="remove-input">
+                <input
+                  type="text"
+                  value={removeName}
+                  onChange={(e) => setRemoveName(e.target.value)}
+                  placeholder="Enter name to remove"
+                  className="input-field"
+                />
+                <button className="btn remove-btn" onClick={handleRemoveName}>Remove</button>
+              </div>
+            </>
+          )}
+
+          {/* Input for calendar ID */}
+          <div className="calendar-id-input">
+            <h3>Please submit the email of the Google Calendar you want to sync (Or Calendar ID)</h3>
+            <input 
+              type="text" 
+              placeholder="Enter your email or Calendar ID" 
+              value={calendarId} 
+              onChange={(e) => setCalendarId(e.target.value)} 
+              className="input-field"
+            />
+            <button className="btn submit-btn" onClick={handleSubmitCalendarId}>Submit</button>
+          </div>
+
+          <div className="demo-app-main">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, googleCalendarPlugin]}
               initialView="timeGridWeek" // Set the initial view
@@ -324,11 +333,7 @@ const handleSubmitCalendarId = () => {
                 center: 'title',
                 right: 'timeGridWeek,timeGridDay,dayGridMonth',
               }}
-              eventSources={[
-                {
-                  googleCalendarId: userEmail
-                },
-              ]}
+              eventSources={inputCalendarList}
             />
           </div>
         </>
