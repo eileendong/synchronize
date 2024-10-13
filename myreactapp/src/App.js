@@ -174,11 +174,31 @@ export default function DemoApp() {
           </div>
         </>
       )}
+<footer className="custom-footer">
+  <div className="footer-left">
+    <p>Made by Claudia, Eileen, Neha, Donna for DubHacks '24</p>
+    <a href="https://github.com/your-repo-link" target="_blank" rel="noopener noreferrer">
+      <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub Logo" className="github-logo" />
+    </a>
+  </div>
+  <div className="footer-right">
+    <ul className="contact-list">
+      <li>cgyonj@uw.edu</li>
+      <li>eileendong1@email.com</li>
+      <li>nehakdubhashi@outlook.com</li>
+      <li>donna.galstyan.31@gmail.com</li>
+    </ul>
+  </div>
+</footer>
+
+
 
       {/* Inline CSS Styles */}
       <style jsx>{`
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
     .demo-app {
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       padding: 20px;
       max-width: 1500px;
       margin: 0 auto;
@@ -291,9 +311,59 @@ export default function DemoApp() {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .demo-app-main {
-      margin-top: 40px;
-    }
+     .demo-app-main {
+          margin-top: 20px;
+        }
+.custom-footer {
+  background-color: #D7CFF2; /* Light purple background */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  border-top: 2px solid #ccc; /* Top border for sleek separation */
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.github-logo {
+  width: 35px;
+  margin-left: 15px; /* Space between text and GitHub logo */
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.contact-list li {
+  margin-right: 20px; /* Space between emails */
+  font-size: 14px;
+  color: #333; /* Dark text for email */
+}
+
+.contact-list li:hover {
+  text-decoration: underline; /* Hover effect for contact info */
+}
+
+.footer-right a {
+  text-decoration: none;
+}
+
+}
   `}</style>
     </div>
   );
