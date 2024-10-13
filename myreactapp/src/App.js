@@ -190,6 +190,7 @@ export default function DemoApp() {
       margin-bottom: 20px;
       border-radius: 10px;
       text-align: center;
+      
     }
 
     .banner h1 {
@@ -246,14 +247,14 @@ export default function DemoApp() {
     }
 
     .submit-btn {
-      background-color: #28a745;
-      color: white;
+      background-color: #d0d0f7;
+      color: #4b0082;
       border-radius: 5px;
       font-weight: 600;
     }
 
     .submit-btn:hover {
-      background-color: #218838;
+      background-color: #b0b0f7;
     }
 
     .checkbox-list {
