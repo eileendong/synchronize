@@ -5,40 +5,37 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { Calendar } from '@fullcalendar/core';
-import jwt_decode from 'jwt-decode';
 
 export default function DemoApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  let userEmail = "";
+  const [userEmail, setUserEmail] = useState(''); // State for user's email
+
   const handleGoogleLoginSuccess = (credentialResponse) => {
-        console.log('Google Login Success:', credentialResponse);
-        setIsLoggedIn(true);
+    console.log('Google Login Success:', credentialResponse);
+    setIsLoggedIn(true);
 
-        const idToken = credentialResponse.credential;
-        const payload = idToken.split('.')[1]; // Get the payload part
-        const decodedPayload = JSON.parse(atob(payload)); // Decode Base64 and parse JSON
+    const idToken = credentialResponse.credential;
+    const payload = idToken.split('.')[1]; // Get the payload part
+    const decodedPayload = JSON.parse(atob(payload)); // Decode Base64 and parse JSON
 
-        // Retrieve the user's email
-        userEmail =  `'${decodedPayload.email}'`;
-        console.log(userEmail);
-        // Store Google Calendar ID (You can replace with the user's actual calendar ID)
-      // setGoogleCalendarId('primary'); // This sets the primary Google Calendar ID (or use actual user ID from API)
-      };
-    
+    // Retrieve the user's email and update state
+    const email = decodedPayload.email;
+    setUserEmail(email); // Store email in state
+    console.log(email);
+  };
+
   const handleGoogleLoginFailure = (error) => {
     console.log('Google Login Failed:', error);
   };
-
 
   return (
     <div className="demo-app">
       <header className="welcome-header">
         <h1>Hello, Welcome to Synchronize!</h1>
         <p>Please login with Google to sync your Google Calendar</p>
-       </header>
+      </header>
 
-       {/* Google Login Button */}
+      {/* Google Login Button */}
       {!isLoggedIn && (
         <GoogleOAuthProvider clientId="835837943858-q18ncb55nr2liamrep0pcmhl7orhstk2.apps.googleusercontent.com">
           <GoogleLogin
@@ -49,27 +46,26 @@ export default function DemoApp() {
       )}
 
       {/* FullCalendar Component */}
-      {isLoggedIn && (
+      {isLoggedIn && userEmail && (
         <div className="demo-app-main">
-         <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, googleCalendarPlugin]}
-        initialView="dayGridMonth"  // Set the initial view
-        googleCalendarApiKey='AIzaSyAygIsrO9yITmaYM9PeEQdec5H2-upsEVY'  // Add your Google Calendar API key here
-        headerToolbar={{
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay',
-                      }}
-        events={{
-          googleCalendarId: 'cgyonj@uw.edu'//userEmail,  // Google Calendar ID for fetching events
-        }}
-                  />
-                </div>
-              )}
-            </div>
-          );
-        }
-
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, googleCalendarPlugin]}
+            initialView="dayGridMonth" // Set the initial view
+            googleCalendarApiKey="AIzaSyAygIsrO9yITmaYM9PeEQdec5H2-upsEVY" // Add your Google Calendar API key here
+            headerToolbar={{
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay',
+            }}
+            events={{
+              googleCalendarId: userEmail, // Use state to dynamically set the calendar ID
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
 
 //   const [isLoggedIn, setIsLoggedIn] = useState(false);
 //   const [googleApiKey, setGoogleApiKey] = useState('AIzaSyAygIsrO9yITmaYM9PeEQdec5H2-upsEVY'); // Set your Google Calendar API key
