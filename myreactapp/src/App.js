@@ -29,7 +29,7 @@ export default function DemoApp() {
     setUserEmail(email); // Store email in state
     setInputCalendarList(inputCalendarList => [
       ...inputCalendarList,
-      { googleCalendarId: email }
+      { googleCalendarId: email, color: 'purple' }
     ]);
     console.log(inputCalendarList);
     console.log(email);
@@ -214,6 +214,7 @@ export default function DemoApp() {
         .submit-btn {
           background-color: #28a745;
           color: white;
+          border-radius: 10px;
         }
 
         .dropdown-menu {
