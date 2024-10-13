@@ -259,7 +259,7 @@ export default function DemoApp() {
     .checkbox-list {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: left;
       margin-bottom: 20px;
     }
 
@@ -274,7 +274,7 @@ export default function DemoApp() {
       background-color: #fff;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       transition: all 0.2s ease;
-      width: 350px;
+      width: 1000px;
       text-align: left;
       margin: 0 auto;
     }
